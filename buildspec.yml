@@ -6,7 +6,7 @@ phases:
     - echo Start build on `date`
   build:
     commands:
-    - for d in */ ; do npm --prefix ./$d i ./$d; fi; done
+    - for d in */ ; do npm --prefix ./$d i ./$d; done
   post_build:
     commands:
     - echo Build completed on `date`
