@@ -1,10 +1,21 @@
+
 const fs = require('fs');
 const puppeteer = require('puppeteer');
-const user = {
-    branch: process.argv[2],
-    account: process.argv[3],
-    // subaccount: process.argv[4],
-    pin: process.argv[5]
+const AWS = require('aws-sdk');
+const S3 = new AWS.S3();
+
+const getCredentials = async() => {
+    console.log("process.env['CRED_BUCKET']", process.env['CRED_BUCKET']);
+    console.log("process.env['CRED_KEY']", process.env['CRED_KEY']);
+    return await new Promise((resolve, reject) => {
+        S3.getObject({
+            Bucket: process.env['CRED_BUCKET'],
+            Key: process.env['CRED_KEY'],
+        }, function(err, data) {
+            if (err) reject(err);
+            resolve(data);
+        });
+    });
 };
 
 const db = {
@@ -30,24 +41,13 @@ const db = {
     }
 };
 
-const screenshotsPath = './screenshots';
-const screenshots = {
-    loginOnLoad: `${screenshotsPath}/1.LoginOnLoad.png`,
-    loginAfterFillInput: `${screenshotsPath}/2.LoginAfterFillInput.png`,
-    homeLoaded: `${screenshotsPath}/3.HomeLoaded.png`,
-    transactionsLoaded: `${screenshotsPath}/4.TransactionsLoaded.png`,
-};
-
-// Create screenshots folder if not exists
-if (!fs.existsSync(screenshotsPath)) {
-    fs.mkdirSync(screenshotsPath, { recursive_: true });
-}
-
-(async () => {
-
+exports.lambdaHandler = async (event, context) => {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(db.login.url);
+
+    const user = await getCredentials();
+    console.log("user", user);
 
     // Wait for login inputs
     await Promise.all([
@@ -57,16 +57,12 @@ if (!fs.existsSync(screenshotsPath)) {
         page.waitForSelector(db.login.selector.pin),
     ]);
 
-    await page.screenshot({ path: screenshots.loginOnLoad });
-
     // Set login inputs
     await page.type(db.login.selector.branch, user.branch);
     await page.type(db.login.selector.account, user.account);
     // await page.type(db.login.selector.subaccount, user.subaccount);
     await page.type(db.login.selector.pin, user.pin);
 
-    await page.screenshot({ path: screenshots.loginAfterFillInput });
-    
     // Navigate from LOGIN to HOME
     await Promise.all([
         page.waitForNavigation(),
@@ -75,8 +71,6 @@ if (!fs.existsSync(screenshotsPath)) {
 
     await page.waitForSelector(db.home.selector.loaded);
 
-    await page.screenshot({ path: screenshots.homeLoaded });
-    
     // Navigate from HOME to TRANSACTIONS
     await Promise.all([
         page.waitForNavigation(),
@@ -91,7 +85,9 @@ if (!fs.existsSync(screenshotsPath)) {
         page.click(db.transactions.selector.csvLink),
     ]);
 
-    await page.screenshot({ path: screenshots.transactionsLoaded });
-
     await browser.close();
-})();
+
+    return {
+        "test": 123
+    };
+};

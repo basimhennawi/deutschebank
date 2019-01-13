@@ -1,0 +1,23 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+    - BUCKET=deutschebank
+    - aws --version
+    - pip install --upgrade pip
+    - pip install aws-sam-cli
+    - sam --version
+  build:
+    commands:
+    - sam validate
+    - sam package --template-file template.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml
+    - sam deploy --template-file ./packaged.yaml --stack-name deutschebankApi --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset
+    - REST_API_ID=a9pkmsnjf5
+    - aws apigateway put-rest-api --rest-api-id $REST_API_ID --mode overwrite --body file://openapi-apigateway.yaml
+    - aws apigateway create-deployment --rest-api-id $REST_API_ID --stage-name Stage
+  post_build:
+    commands:
+    - COUNT=$((`ls -l | grep "^d" | wc -l` - 1 ))
+    - KEYS=`aws s3 ls $BUCKET --recursive | sort | tail -n $COUNT | awk '{print $4}'`
+    - for k in $KEYS; do aws s3api delete-object --bucket $BUCKET --key $k; done

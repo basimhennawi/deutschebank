@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+    - echo Start build on `date`
+  build:
+    commands:
+    - for d in */ ; do npm --prefix ./$d i ./$d; fi; done
+  post_build:
+    commands:
+    - echo Build completed on `date`
+
+artifacts:
+  files:
+  - '**/*'
+  discard-paths: no
