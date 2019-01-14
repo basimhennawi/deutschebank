@@ -18,6 +18,4 @@ phases:
     - aws apigateway create-deployment --rest-api-id $REST_API_ID --stage-name Stage
   post_build:
     commands:
-    - COUNT=$((`ls -l | grep "^d" | wc -l` - 1 ))
-    - KEYS=`aws s3 ls $BUCKET --recursive | sort | tail -n $COUNT | awk '{print $4}'`
-    - for k in $KEYS; do aws s3api delete-object --bucket $BUCKET --key $k; done
+    - echo Deployment is done!
