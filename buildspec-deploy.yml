@@ -11,6 +11,7 @@ phases:
   build:
     commands:
     - sam validate
+    - sudo yum downgrade aws-cli.noarch python27-botocore
     - sam package --template-file template.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml
     - sam deploy --template-file ./packaged.yaml --stack-name deutschebankApi --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset
     - REST_API_ID=a9pkmsnjf5
