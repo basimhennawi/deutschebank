@@ -14,7 +14,7 @@ phases:
     - sam validate
     - sam package --template-file template.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml
     - sam deploy --template-file ./packaged.yaml --stack-name deutschebankApi --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset
-    - REST_API_ID=a9pkmsnjf5
+    - REST_API_ID=3en7nrlhm7
     - aws apigateway put-rest-api --rest-api-id $REST_API_ID --mode overwrite --body file://openapi-apigateway.yaml
     - aws apigateway create-deployment --rest-api-id $REST_API_ID --stage-name Stage
   post_build:

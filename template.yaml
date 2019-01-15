@@ -20,6 +20,7 @@ Resources:
             Runtime: nodejs8.10
             Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
                 Variables:
+                    CUSTOM_CHROME: true
                     CRED_BUCKET: deutschebank
                     CRED_KEY: credentials.json
             Events:

@@ -6,6 +6,7 @@ phases:
     - echo Start build on `date`
   build:
     commands:
+    - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     - for d in */ ; do npm --prefix ./$d i ./$d; done
   post_build:
     commands:

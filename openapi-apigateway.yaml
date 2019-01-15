@@ -1,0 +1,18 @@
+openapi: "3.0.1"
+info:
+  title: "deutschebankApi"
+  version: "1.0"
+servers:
+- url: "https://3en7nrlhm7.execute-api.eu-central-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "/Stage"
+paths:
+  /deutschebank:
+    get:
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:963905443896:function:deutschebankApi-DeutscheBankFunction-H0ZWHWBWVKC7/invocations"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        type: "aws_proxy"
+components: {}
