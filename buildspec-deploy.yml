@@ -3,10 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
+    - brew tap aws/tap
+    - brew install aws-sam-cli
     - aws --version
-    - pip install --upgrade pip
-    - pip install aws-sam-cli
-    - pip install botocore==1.10.82
     - sam --version
   build:
     commands:
