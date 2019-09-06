@@ -1,5 +1,4 @@
 
-const fs = require('fs');
 const puppeteer = require('puppeteer-lambda');
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();

@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.387.0",
-    "puppeteer-lambda": "^1.0.14"
+    "puppeteer": "^1.11.0"
   },
   "scripts": {
     "test": "mocha tests/unit/"
