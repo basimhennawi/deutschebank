@@ -1,5 +1,4 @@
 
-const puppeteer = require('puppeteer-lambda');
 const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 
@@ -41,7 +40,10 @@ const db = {
 };
 
 exports.lambdaHandler = async (event, context) => {
-    const browser = await puppeteer.getBrowser({ headless: true });
+    const puppeteerLambda = require('puppeteer-lambda');
+    const browser = await puppeteerLambda.getBrowser({
+        headless: true
+    });
     const page = await browser.newPage();
     await page.goto(db.login.url);
 

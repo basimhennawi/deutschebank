@@ -1,16 +1,18 @@
 version: 0.2
 
 phases:
+  install:
+    runtime-versions:
+      nodejs: 10
   pre_build:
     commands:
-    - BUCKET=deutschebank
     - aws --version
     - pip install --upgrade pip
     - pip install aws-sam-cli
-    - pip install botocore==1.10.82
     - sam --version
   build:
     commands:
+    - BUCKET=deutschebank
     - sam validate
     - sam package --template-file template.yaml --s3-bucket $BUCKET --output-template-file packaged.yaml
     - sam deploy --template-file ./packaged.yaml --stack-name deutschebankApi --capabilities CAPABILITY_IAM --no-fail-on-empty-changeset

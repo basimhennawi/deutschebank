@@ -8,8 +8,11 @@ Description: >
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
     Function:
-        Timeout: 3
-
+        Timeout: 180
+        Environment:
+            Variables:
+                CRED_BUCKET: deutschebank
+                CRED_KEY: credentials.json
 
 Resources:
     DeutscheBankFunction:
@@ -21,8 +24,6 @@ Resources:
             Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
                 Variables:
                     CUSTOM_CHROME: true
-                    CRED_BUCKET: deutschebank
-                    CRED_KEY: credentials.json
             Events:
                 DeutscheBank:
                     Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
