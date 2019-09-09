@@ -3,8 +3,6 @@ const AWS = require('aws-sdk');
 const S3 = new AWS.S3();
 
 const getCredentials = async() => {
-    console.log("process.env['CRED_BUCKET']", process.env['CRED_BUCKET']);
-    console.log("process.env['CRED_KEY']", process.env['CRED_KEY']);
     return await new Promise((resolve, reject) => {
         S3.getObject({
             Bucket: process.env['CRED_BUCKET'],
